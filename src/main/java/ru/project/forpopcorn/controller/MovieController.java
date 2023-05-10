@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +19,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 @RequestMapping("/api/movie")
 public class MovieController {
 
     private final MovieMapper mapper;
     private final MovieService movieService;
     private final ResponseErrorValidation responseErrorValidation;
-
-    @Autowired
-    public MovieController(MovieMapper mapper, MovieService movieService, ResponseErrorValidation responseErrorValidation) {
-        this.mapper = mapper;
-        this.movieService = movieService;
-        this.responseErrorValidation = responseErrorValidation;
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<MovieDTO> moviePage(@PathVariable("id")int id){

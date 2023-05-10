@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +17,13 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/admin")
 public class AdminController {
 
     private final MovieMapper mapper;
     private final MovieService movieService;
     private final ResponseErrorValidation responseErrorValidation;
-
-    @Autowired
-    public AdminController(MovieMapper mapper, MovieService movieService, ResponseErrorValidation responseErrorValidation) {
-        this.mapper = mapper;
-        this.movieService = movieService;
-        this.responseErrorValidation = responseErrorValidation;
-    }
 
     @PostMapping("/createMovie")
     public ResponseEntity<Object> createMovie(@Valid @RequestBody MovieDTO movieDTO, BindingResult bindingResult){

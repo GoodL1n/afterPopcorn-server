@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MovieService {
 
     private final MovieRepository movieRepository;
     private final ImageRepository imageRepository;
-
-    @Autowired
-    public MovieService(MovieRepository movieRepository, ImageRepository imageRepository) {
-        this.movieRepository = movieRepository;
-        this.imageRepository = imageRepository;
-    }
 
     public List<Movie> getAllMovies(){
         return movieRepository.findAll();
@@ -50,6 +46,10 @@ public class MovieService {
     public Movie createMovie(MovieDTO movieDTO){
         Movie movie = new Movie();
         movie.setTitle(movieDTO.getTitle());
+        movie.setCountry(movieDTO.getCountry());
+        movie.setDate(movieDTO.getDate());
+        movie.setDuration(movieDTO.getDuration());
+        movie.setTrailer(movieDTO.getTrailer());
         movie.setTextMini(movieDTO.getTextMini());
         movie.setTextLarge(movieDTO.getTextLarge());
         movie.setGenres(movieDTO.getGenres());
@@ -59,9 +59,13 @@ public class MovieService {
     @Transactional
     public Movie updateMovie(MovieDTO movieDTO, int movieId){
         Movie movie = movieRepository.findMovieById(movieId);
+        movie.setTitle(movieDTO.getTitle());
+        movie.setCountry(movieDTO.getCountry());
+        movie.setDate(movieDTO.getDate());
+        movie.setDuration(movieDTO.getDuration());
+        movie.setTrailer(movieDTO.getTrailer());
         movie.setTextMini(movieDTO.getTextMini());
         movie.setTextLarge(movieDTO.getTextLarge());
-        movie.setTitle(movieDTO.getTitle());
         movie.setGenres(movieDTO.getGenres());
         return movieRepository.save(movie);
     }

@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.zip.Inflater;
 
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ImageService {
 
@@ -33,13 +35,6 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
-
-    @Autowired
-    public ImageService(ImageRepository imageRepository, UserRepository userRepository, MovieRepository movieRepository) {
-        this.imageRepository = imageRepository;
-        this.userRepository = userRepository;
-        this.movieRepository = movieRepository;
-    }
 
     @Transactional
     public ImageModel uploadImageToUser(MultipartFile file, Principal principal) throws IOException {

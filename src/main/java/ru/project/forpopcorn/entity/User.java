@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.project.forpopcorn.entity.enums.Role;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -43,11 +45,11 @@ public class User implements UserDetails {
     @Column(updatable = false)
     private LocalDateTime createdDate;
 
-    public User(int id, String nickname, String password, Collection<? extends GrantedAuthority> authorities) {
+    public User(int id, String nickname, String password, Set<Role> roles) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
-        this.authorities = authorities;
+        this.roles = roles;
     }
 
     @PrePersist
@@ -55,12 +57,16 @@ public class User implements UserDetails {
         this.createdDate = LocalDateTime.now();
     }
 
-    @Transient
-    private Collection<? extends GrantedAuthority> authorities;
-
     @Override
     public String getUsername() {
         return nickname;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .collect(Collectors.toList());
     }
 
     @Override

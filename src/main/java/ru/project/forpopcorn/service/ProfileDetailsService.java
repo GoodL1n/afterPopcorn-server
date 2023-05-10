@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,26 +16,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    public ProfileDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByNickname(username).orElseThrow(()-> new UsernameNotFoundException("User with nickname " + username + " not found"));
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
-                .collect(Collectors.toList());
-        return new User(user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                authorities);
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(user.getNickname())
+                .password(user.getPassword())
+                .authorities(user.getAuthorities())
+                .build();
+        return userDetails;
+//        return new User(user.getId(),
+//                user.getUsername(),
+//                user.getPassword(),
+//                user.getRoles());
     }
 
     public User loadUserById(int id) {

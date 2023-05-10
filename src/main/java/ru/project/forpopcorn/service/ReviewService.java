@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,19 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReviewService {
 
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
-
-    @Autowired
-    public ReviewService(MovieRepository movieRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
-        this.movieRepository = movieRepository;
-        this.userRepository = userRepository;
-        this.reviewRepository = reviewRepository;
-    }
 
     public Review getReviewById(int id){
         return reviewRepository.findById(id)

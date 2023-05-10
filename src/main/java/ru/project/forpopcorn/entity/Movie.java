@@ -22,7 +22,15 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String title; // Название фильма
+    private String title;
+    
+    private String country;
+
+    private String date;
+
+    private String duration;
+
+    private String trailer;
 
     @Column(columnDefinition = "text")
     private String textMini; // Описание
@@ -45,30 +53,4 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
-
-    public Movie(int id, String title, String textMini, String textLarge) {
-        this.id = id;
-        this.title = title;
-        this.textMini = textMini;
-        this.textLarge = textLarge;
-    }
-
-    public Movie(String title, String textMini, String textLarge) {
-        this.title = title;
-        this.textMini = textMini;
-        this.textLarge = textLarge;
-    }
-
-    public Movie(int id, String title, String textMini, String textLarge, List<Genre> genres) {
-        this.id = id;
-        this.title = title;
-        this.textMini = textMini;
-        this.textLarge = textLarge;
-        this.genres = genres;
-    }
-
-    //Страна
-    //Продолжительность
-
-
 }

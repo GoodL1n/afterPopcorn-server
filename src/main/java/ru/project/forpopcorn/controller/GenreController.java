@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,11 @@ import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/genre")
 public class GenreController {
     private final GenreService genreService;
     private final GenreMapper genreMapper;
-
-    @Autowired
-    public GenreController(GenreService genreService, GenreMapper genreMapper) {
-        this.genreService = genreService;
-        this.genreMapper = genreMapper;
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<GenreDTO> getGenreById(@PathVariable int id){

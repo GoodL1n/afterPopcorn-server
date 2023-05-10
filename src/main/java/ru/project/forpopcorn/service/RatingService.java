@@ -1,5 +1,7 @@
 package ru.project.forpopcorn.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,12 +9,12 @@ import ru.project.forpopcorn.dto.RatingDTO;
 import ru.project.forpopcorn.entity.Rating;
 import ru.project.forpopcorn.repository.RatingRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RatingService {
 
@@ -20,28 +22,22 @@ public class RatingService {
     private final MovieService movieService;
     private final UserService userService;
 
-    @Autowired
-    public RatingService(RatingRepository ratingRepository, MovieService movieService, UserService userService) {
-        this.ratingRepository = ratingRepository;
-        this.movieService = movieService;
-        this.userService = userService;
-    }
-
-    public Integer getAverageRatingMovie(int id){
-        List<Rating> list = ratingRepository.findAllByMovieRateId(id);
-        if(list.size()==0) return 0;
-        else {
-            int sum = list.stream()
-                    .mapToInt(s -> s.getStars())
-                    .filter(r -> r!=0)
-                    .sum();
-            int count = (int) list.stream()
-                    .mapToInt(s -> s.getStars())
-                    .filter(r -> r!=0)
-                    .count();
-            if(count == 0) return sum;
-            else return sum/count;
+    public Integer getAverageRatingMovie(int id) {
+        List<Rating> ratings = ratingRepository.findAllByMovieRateId(id);
+        if (ratings.isEmpty()) { //если вообще нет никаких оценок, тогда общая = 0
+            return 0;
         }
+
+        int sum = ratings.stream()
+                .mapToInt(Rating::getStars)
+                .sum();
+
+        int count = (int) ratings.stream() // если рейтинг фильма от пользователя = 0, то есть он его еще не оценил, то мы эту оценку не учитываем
+                .filter(r -> r.getStars() > 0)
+                .count();
+
+        if(sum == 0) return 0;
+        return sum / count;
     }
 
 
@@ -61,9 +57,13 @@ public class RatingService {
     }
 
     @Transactional
-    public Rating editRating(RatingDTO ratingDTO){
+    public Rating editRating(RatingDTO ratingDTO) {
         Rating rating = ratingRepository.findById(ratingDTO.getId())
-                .orElseThrow(()->new RuntimeException("Не найден рейтинг с таким айди"));
+                .orElseThrow(() -> new RuntimeException("Не найден рейтинг с таким айди"));
+//        if(ratingDTO.getStars() == 0) {
+//            ratingRepository.delete(rating);
+//            return new Rating();
+//        }
         rating.setStars(ratingDTO.getStars());
         return ratingRepository.save(rating);
     }

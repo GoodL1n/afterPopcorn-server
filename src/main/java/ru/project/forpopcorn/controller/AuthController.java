@@ -1,5 +1,6 @@
 package ru.project.forpopcorn.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,20 +23,13 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
     private final JWTTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final ResponseErrorValidation responseErrorValidation;
-
-    @Autowired
-    public AuthController(JWTTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, UserService userService, ResponseErrorValidation responseErrorValidation) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.responseErrorValidation = responseErrorValidation;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registrationUser(@Valid @RequestBody SignupRequest signupRequest, BindingResult bindingResult){

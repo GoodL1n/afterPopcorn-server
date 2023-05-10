@@ -23,9 +23,13 @@ public class MovieMapper {
     public MovieDTO convertToMovieDTO(Movie movie){
         int id = movie.getId();
         String title = movie.getTitle();
+        String country = movie.getCountry();
+        String date = movie.getDate();
+        String duration = movie.getDuration();
+        String trailer = movie.getTrailer();
         String textMini = movie.getTextMini();
         String textLarge = movie.getTextLarge();
         List<Genre> genres = movie.getGenres();
-        return new MovieDTO(id, title, textMini, textLarge, genres);
+        return new MovieDTO(id, title, country, date, duration, trailer, textMini, textLarge, genres);
     }
 }

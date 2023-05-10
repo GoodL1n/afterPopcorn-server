@@ -14,6 +14,10 @@ public class MovieDTO {
 
     private int idMovie;
     private String title;
+    private String country;
+    private String date;
+    private String duration;
+    private String trailer;
     private String textMini;
     private String textLarge;
     private List<Genre> genres;
